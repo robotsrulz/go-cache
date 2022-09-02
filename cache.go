@@ -84,6 +84,13 @@ func (c *Cache) ClearEvery(d time.Duration) *time.Ticker {
 // Delete removes an entry from the cache at the specified key.
 // If no entry exists at the specified key, no action is taken
 func (c *Cache) Delete(key string) {
+	c.expiryOps <- func(expiries map[string]*time.Timer) {
+		if timer, ok := expiries[key]; ok {
+			timer.Stop()
+			delete(expiries, key)
+		}
+	}
+
 	c.itemOps <- func(items map[string]T) {
 		if _, ok := items[key]; ok {
 			delete(items, key)
