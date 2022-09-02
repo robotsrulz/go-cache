@@ -34,8 +34,8 @@ func TestSetExpire(t *testing.T) {
 
 func TestSetAfterFunc(t *testing.T) {
 	c := New()
-	c.Set("1", 1, AfterFunc(time.Millisecond, func() {
-		t.Log("after func executed")
+	c.Set("1", 1, AfterFunc(time.Millisecond, func(val T) {
+		t.Log("after func executed for ", val)
 	}))
 
 	if _, exists := c.GetOK("1"); !exists {
