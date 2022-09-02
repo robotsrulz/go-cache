@@ -17,3 +17,19 @@ func Expire(expiry time.Duration) SetOption {
 		}
 	}
 }
+
+// AfterFunc is a SetOption that will cause the entry to expire and call a supplied function
+func AfterFunc(expiry time.Duration, afterFunc func()) SetOption {
+	return func(c *Cache, key string, val T) {
+		c.expiryOps <- func(expiries map[string]*time.Timer) {
+			if timer, ok := expiries[key]; ok {
+				timer.Stop()
+			}
+
+			expiries[key] = time.AfterFunc(expiry, func() {
+				c.Delete(key)
+				afterFunc()
+			})
+		}
+	}
+}

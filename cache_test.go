@@ -32,6 +32,23 @@ func TestSetExpire(t *testing.T) {
 	}
 }
 
+func TestSetAfterFunc(t *testing.T) {
+	c := New()
+	c.Set("1", 1, AfterFunc(time.Millisecond, func() {
+		t.Log("after func executed")
+	}))
+
+	if _, exists := c.GetOK("1"); !exists {
+		t.Errorf("Entry for key '1' should not have expired yet")
+	}
+
+	time.Sleep(time.Millisecond * 2)
+
+	if _, exists := c.GetOK("1"); exists {
+		t.Errorf("Entry for key '1' should have expired by now")
+	}
+}
+
 func TestClear(t *testing.T) {
 	c := New()
 	for i := 0; i < 10; i++ {
