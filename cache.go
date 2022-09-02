@@ -130,6 +130,16 @@ func (c *Cache) Items() map[string]T {
 	return <-result
 }
 
+// IsEmpty returns wherever the cache is empty
+func (c *Cache) IsEmpty() bool {
+	result := make(chan bool, 1)
+	c.itemOps <- func(items map[string]T) {
+		result <- len(items) == 0
+	}
+
+	return <-result
+}
+
 // Keys retrieves a sorted list of all keys in the cache
 func (c *Cache) Keys() []string {
 	result := make(chan []string, 1)

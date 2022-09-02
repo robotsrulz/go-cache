@@ -62,6 +62,23 @@ func TestClear(t *testing.T) {
 	}
 }
 
+func TestEmpty(t *testing.T) {
+	c := New()
+	for i := 0; i < 10; i++ {
+		c.Set(strconv.Itoa(i), i)
+	}
+	
+	if c.IsEmpty() {
+		t.Errorf("Cache is not empty, IsEmpty() shall return false")
+	}
+
+	c.Clear()
+
+	if !c.IsEmpty() {
+		t.Errorf("Cache is empty, IsEmpty() shall return true")
+	}
+}
+
 func TestDelete(t *testing.T) {
 	c := New()
 	c.Set("1", 1)
