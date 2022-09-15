@@ -147,6 +147,16 @@ func (c *Cache) IsEmpty() bool {
 	return <-result
 }
 
+// Size returns wherever the cache size
+func (c *Cache) Size() int {
+	result := make(chan int, 1)
+	c.itemOps <- func(items map[string]T) {
+		result <- len(items)
+	}
+
+	return <-result
+}
+
 // Keys retrieves a sorted list of all keys in the cache
 func (c *Cache) Keys() []string {
 	result := make(chan []string, 1)

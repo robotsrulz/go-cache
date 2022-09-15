@@ -79,6 +79,23 @@ func TestEmpty(t *testing.T) {
 	}
 }
 
+func TestSize(t *testing.T) {
+	c := New()
+	for i := 0; i < 10; i++ {
+		c.Set(strconv.Itoa(i), i)
+	}
+	
+	if c.Size() != 10 {
+		t.Errorf("Cache size is incorrect, Size() shall return 10")
+	}
+
+	c.Clear()
+
+	if c.Size() != 0 {
+		t.Errorf("Cache size is incorrect, Size() shall return 0")
+	}
+}
+
 func TestDelete(t *testing.T) {
 	c := New()
 	c.Set("1", 1)
